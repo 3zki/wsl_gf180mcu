@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>Set Options (Restart required!)</description>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path>gf180drc&gt;end("gf180mcu DRC").end</menu-path>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text># Copyright 2022 SkyWater PDK Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+ module MyMacro
+ 
+  include RBA
+
+
+  #####################################################################################
+  # Loading options
+  #####################################################################################
+  mw = RBA::MainWindow::instance
+
+  # create a toolbar gf180drc
+  mw.menu.insert_menu("gf180drc.end", "ant_menu", "KLayout DRC - Antenna Options")
+  mw.menu.insert_menu("gf180drc.end", "den_menu", "KLayout DRC - Density Options")
+  mw.menu.insert_menu("gf180drc.end", "drc_menu", "KLayout DRC - DRC Options")
+  mw.menu.insert_menu("gf180drc.end", "car_menu", "KLayout DRC - Caravel DRC Options")
+
+  #####################################################################################
+  # Adding Antenna options
+  #####################################################################################
+  
+  #1 Setting verbose
+  ant_verbose_action = RBA::Action::new
+  ant_verbose_action.title = "Verbose"
+  ant_verbose_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_ant.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$verbose = \"true\"")
+      ant_verbose_action.checked=(true)
+    else
+      ant_verbose_action.checked=(false)
+    end
+  }
+  ant_verbose_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_ant.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if ant_verbose_action.is_checked?
+        ant_verbose_bool = "true"
+      else
+        ant_verbose_bool = "false"
+      end
+      if text.include?("$verbose")
+        new_contents = text.gsub(/\$verbose = \".*\"/, '$verbose = "'+ ant_verbose_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$verbose = "'+ ant_verbose_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.ant_menu.end", "ant_verbose", ant_verbose_action)
+
+  #2 Setting run mode
+  ant_run_action = RBA::Action::new
+  ant_run_action.title = "Run mode"
+  ant_run_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_ant.lydrc", 'w') { |f| 
+      text = File.read(f)
+      ant_run_select = RBA::InputDialog::ask_item("Run mode", "Select run mode:", [ "tiling", "deep", "flat" ], 2)
+      if ant_run_select 
+        if text.include?("$run_mode")
+          new_contents = text.gsub(/\$run_mode = \".*\"/, '$run_mode = "'+ ant_run_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$run_mode = "'+ ant_run_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.ant_menu.end", "ant_run", ant_run_action)
+
+  #3 Setting metal top
+  ant_top_action = RBA::Action::new
+  ant_top_action.title = "Metal top"
+  ant_top_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_ant.lydrc", 'w') { |f| 
+      text = File.read(f)
+      ant_top_select = RBA::InputDialog::ask_item("Metal top", "Select metal top:", [ "6K", "9K", "11K", "30K" ], 1)
+      if ant_top_select 
+        if text.include?("$metal_top")
+          new_contents = text.gsub(/\$metal_top = \".*\"/, '$metal_top = "'+ ant_top_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_top = "'+ ant_top_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.ant_menu.end", "ant_top", ant_top_action)
+
+  #4 Setting metal level
+  ant_level_action = RBA::Action::new
+  ant_level_action.title = "Metal level"
+  ant_level_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_ant.lydrc", 'w') { |f| 
+      text = File.read(f)
+      ant_level_select = RBA::InputDialog::ask_item("Metal level", "Select metal level:", [ "3LM", "4LM", "5LM", "6LM" ], 2)
+      if ant_level_select 
+        if text.include?("$metal_level")
+          new_contents = text.gsub(/\$metal_level = \".*\"/, '$metal_level = "'+ ant_level_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_level = "'+ ant_level_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.ant_menu.end", "ant_level", ant_level_action)
+
+  #5 Setting MIM option
+  ant_mim_action = RBA::Action::new
+  ant_mim_action.title = "MIM option"
+  ant_mim_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_ant.lydrc", 'w') { |f| 
+      text = File.read(f)
+      ant_mim_select = RBA::InputDialog::ask_item("MIM option", "Select MIM option:", [ "A", "B" ], 1)
+      if ant_mim_select 
+        if text.include?("$mim_option")
+          new_contents = text.gsub(/\$mim_option = \".*\"/, '$mim_option = "'+ ant_mim_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$mim_option = "'+ ant_mim_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.ant_menu.end", "ant_mim", ant_mim_action)
+
+  #####################################################################################
+  # Adding Density options
+  #####################################################################################
+  
+  #1 Setting verbose
+  den_verbose_action = RBA::Action::new
+  den_verbose_action.title = "Verbose"
+  den_verbose_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_den.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$verbose = \"true\"")
+      den_verbose_action.checked=(true)
+    else
+      den_verbose_action.checked=(false)
+    end
+  }
+  den_verbose_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_den.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if den_verbose_action.is_checked?
+        den_verbose_bool = "true"
+      else
+        den_verbose_bool = "false"
+      end
+      if text.include?("$verbose")
+        new_contents = text.gsub(/\$verbose = \".*\"/, '$verbose = "'+ den_verbose_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$verbose = "'+ den_verbose_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.den_menu.end", "den_verbose", den_verbose_action)
+
+  #2 Setting run mode
+  den_run_action = RBA::Action::new
+  den_run_action.title = "Run mode"
+  den_run_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_den.lydrc", 'w') { |f| 
+      text = File.read(f)
+      den_run_select = RBA::InputDialog::ask_item("Run mode", "Select run mode:", [ "tiling", "deep", "flat" ], 2)
+      if den_run_select 
+        if text.include?("$run_mode")
+          new_contents = text.gsub(/\$run_mode = \".*\"/, '$run_mode = "'+ den_run_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$run_mode = "'+ den_run_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.den_menu.end", "den_run", den_run_action)
+
+  #3 Setting metal top
+  den_top_action = RBA::Action::new
+  den_top_action.title = "Metal top"
+  den_top_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_den.lydrc", 'w') { |f| 
+      text = File.read(f)
+      den_top_select = RBA::InputDialog::ask_item("Metal top", "Select metal top:", [ "6K", "9K", "11K", "30K" ], 1)
+      if den_top_select 
+        if text.include?("$metal_top")
+          new_contents = text.gsub(/\$metal_top = \".*\"/, '$metal_top = "'+ den_top_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_top = "'+ den_top_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.den_menu.end", "den_top", den_top_action)
+
+  #4 Setting metal level
+  den_level_action = RBA::Action::new
+  den_level_action.title = "Metal level"
+  den_level_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_den.lydrc", 'w') { |f| 
+      text = File.read(f)
+      den_level_select = RBA::InputDialog::ask_item("Metal level", "Select metal level:", [ "3LM", "4LM", "5LM", "6LM" ], 2)
+      if den_level_select 
+        if text.include?("$metal_level")
+          new_contents = text.gsub(/\$metal_level = \".*\"/, '$metal_level = "'+ den_level_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_level = "'+ den_level_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.den_menu.end", "den_level", den_level_action)
+
+  #####################################################################################
+  # Adding DRC options
+  #####################################################################################
+
+  #1 Setting Connectivity rules
+  drc_conn_action = RBA::Action::new
+  drc_conn_action.title = "Connectivity Rules"
+  drc_conn_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$conn_drc = \"true\"")
+      drc_conn_action.checked=(true)
+    else
+      drc_conn_action.checked=(false)
+    end
+  }
+  drc_conn_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_conn_action.is_checked?
+        drc_conn_bool = "true"
+      else
+        drc_conn_bool = "false"
+      end
+      if text.include?("$conn_drc")
+        new_contents = text.gsub(/\$conn_drc = \".*\"/, '$conn_drc = "'+ drc_conn_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$conn_drc = "'+ drc_conn_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_conn", drc_conn_action)
+
+  #2 Setting wedge option
+  drc_wedge_action = RBA::Action::new
+  drc_wedge_action.title = "wedge"
+  drc_wedge_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$wedge = \"true\"")
+      drc_wedge_action.checked=(true)
+    else
+      drc_wedge_action.checked=(false)
+    end
+  }
+  drc_wedge_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_wedge_action.is_checked?
+        drc_wedge_bool = "true"
+      else
+        drc_wedge_bool = "false"
+      end
+      if text.include?("$wedge")
+        new_contents = text.gsub(/\$wedge = \".*\"/, '$wedge = "'+ drc_wedge_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$wedge = "'+ drc_wedge_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_wedge", drc_wedge_action)
+
+  #3 Setting ball option
+  drc_ball_action = RBA::Action::new
+  drc_ball_action.title = "ball"
+  drc_ball_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$ball = \"true\"")
+      drc_ball_action.checked=(true)
+    else
+      drc_ball_action.checked=(false)
+    end
+  }
+  drc_ball_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_ball_action.is_checked?
+        drc_ball_bool = "true"
+      else
+        drc_ball_bool = "false"
+      end
+      if text.include?("$ball")
+        new_contents = text.gsub(/\$ball = \".*\"/, '$ball = "'+ drc_ball_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$ball = "'+ drc_ball_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_ball", drc_ball_action)
+
+  #4 Setting gold option
+  drc_gold_action = RBA::Action::new
+  drc_gold_action.title = "gold"
+  drc_gold_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$gold = \"true\"")
+      drc_gold_action.checked=(true)
+    else
+      drc_gold_action.checked=(false)
+    end
+  }
+  drc_gold_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_gold_action.is_checked?
+        drc_gold_bool = "true"
+      else
+        drc_gold_bool = "false"
+      end
+      if text.include?("$gold")
+        new_contents = text.gsub(/\$gold = \".*\"/, '$gold = "'+ drc_gold_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$gold = "'+ drc_gold_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_gold", drc_gold_action)
+
+  #5 Setting MIM option
+  drc_mim_action = RBA::Action::new
+  drc_mim_action.title = "MIM option"
+  drc_mim_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      drc_mim_select = RBA::InputDialog::ask_item("MIM option", "Select MIM option:", [ "A", "B" ], 1)
+      if drc_mim_select 
+        if text.include?("$mim_option")
+          new_contents = text.gsub(/\$mim_option = \".*\"/, '$mim_option = "'+ drc_mim_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$mim_option = "'+ drc_mim_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_mim", drc_mim_action)
+
+  #6 Setting OFFGRID rules
+  drc_offgrid_action = RBA::Action::new
+  drc_offgrid_action.title = "OFFGRID Rules"
+  drc_offgrid_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$offgrid = \"true\"")
+      drc_offgrid_action.checked=(true)
+    else
+      drc_offgrid_action.checked=(false)
+    end
+  }
+  drc_offgrid_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_offgrid_action.is_checked?
+        drc_offgrid_bool = "true"
+      else
+        drc_offgrid_bool = "false"
+      end
+      if text.include?("$offgrid")
+        new_contents = text.gsub(/\$offgrid = \".*\"/, '$offgrid = "'+ drc_offgrid_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$offgrid = "'+ drc_offgrid_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_offgrid", drc_offgrid_action)
+
+  #7 Setting verbose
+  drc_verbose_action = RBA::Action::new
+  drc_verbose_action.title = "Verbose"
+  drc_verbose_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$verbose = \"true\"")
+      drc_verbose_action.checked=(true)
+    else
+      drc_verbose_action.checked=(false)
+    end
+  }
+  drc_verbose_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_verbose_action.is_checked?
+        drc_verbose_bool = "true"
+      else
+        drc_verbose_bool = "false"
+      end
+      if text.include?("$verbose")
+        new_contents = text.gsub(/\$verbose = \".*\"/, '$verbose = "'+ drc_verbose_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$verbose = "'+ drc_verbose_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_verbose", drc_verbose_action)
+
+  #8 Setting run mode
+  drc_run_action = RBA::Action::new
+  drc_run_action.title = "Run mode"
+  drc_run_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      drc_run_select = RBA::InputDialog::ask_item("Run mode", "Select run mode:", [ "tiling", "deep", "flat" ], 2)
+      if drc_run_select 
+        if text.include?("$run_mode")
+          new_contents = text.gsub(/\$run_mode = \".*\"/, '$run_mode = "'+ drc_run_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$run_mode = "'+ drc_run_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_run", drc_run_action)
+
+  #9 Setting metal top
+  drc_top_action = RBA::Action::new
+  drc_top_action.title = "Metal top"
+  drc_top_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      drc_top_select = RBA::InputDialog::ask_item("Metal top", "Select metal top:", [ "6K", "9K", "11K", "30K" ], 1)
+      if drc_top_select 
+        if text.include?("$metal_top")
+          new_contents = text.gsub(/\$metal_top = \".*\"/, '$metal_top = "'+ drc_top_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_top = "'+ drc_top_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_top", drc_top_action)
+
+  #10 Setting metal level
+  drc_level_action = RBA::Action::new
+  drc_level_action.title = "Metal level"
+  drc_level_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      drc_level_select = RBA::InputDialog::ask_item("Metal level", "Select metal level:", [ "3LM", "4LM", "5LM", "6LM" ], 2)
+      if drc_level_select 
+        if text.include?("$metal_level")
+          new_contents = text.gsub(/\$metal_level = \".*\"/, '$metal_level = "'+ drc_level_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_level = "'+ drc_level_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_level", drc_level_action)
+
+  #11 Setting FEOL rules
+  drc_feol_action = RBA::Action::new
+  drc_feol_action.title = "FEOL Rules"
+  drc_feol_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$feol = \"true\"")
+      drc_feol_action.checked=(true)
+    else
+      drc_feol_action.checked=(false)
+    end
+  }
+  drc_feol_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_feol_action.is_checked?
+        drc_feol_bool = "true"
+      else
+        drc_feol_bool = "false"
+      end
+      if text.include?("$feol")
+        new_contents = text.gsub(/\$feol = \".*\"/, '$feol = "'+ drc_feol_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$feol = "'+ drc_feol_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_feol", drc_feol_action)
+
+  #12 Setting BEOL rules
+  drc_beol_action = RBA::Action::new
+  drc_beol_action.title = "BEOL Rules"
+  drc_beol_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$beol = \"true\"")
+      drc_beol_action.checked=(true)
+    else
+      drc_beol_action.checked=(false)
+    end
+  }
+  drc_beol_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if drc_beol_action.is_checked?
+        drc_beol_bool = "true"
+      else
+        drc_beol_bool = "false"
+      end
+      if text.include?("$beol")
+        new_contents = text.gsub(/\$beol = \".*\"/, '$beol = "'+ drc_beol_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$beol = "'+ drc_beol_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.drc_menu.end", "drc_beol", drc_beol_action)
+
+  #####################################################################################
+  # Adding DRC(Caravel) options
+  #####################################################################################
+
+  #1 Setting Connectivity rules
+  car_conn_action = RBA::Action::new
+  car_conn_action.title = "Connectivity Rules"
+  car_conn_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$conn_drc = \"true\"")
+      car_conn_action.checked=(true)
+    else
+      car_conn_action.checked=(false)
+    end
+  }
+  car_conn_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_conn_action.is_checked?
+        car_conn_bool = "true"
+      else
+        car_conn_bool = "false"
+      end
+      if text.include?("$conn_drc")
+        new_contents = text.gsub(/\$conn_drc = \".*\"/, '$conn_drc = "'+ car_conn_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$conn_drc = "'+ car_conn_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_conn", car_conn_action)
+
+  #2 Setting wedge option
+  car_wedge_action = RBA::Action::new
+  car_wedge_action.title = "wedge"
+  car_wedge_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$wedge = \"true\"")
+      car_wedge_action.checked=(true)
+    else
+      car_wedge_action.checked=(false)
+    end
+  }
+  car_wedge_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_wedge_action.is_checked?
+        car_wedge_bool = "true"
+      else
+        car_wedge_bool = "false"
+      end
+      if text.include?("$wedge")
+        new_contents = text.gsub(/\$wedge = \".*\"/, '$wedge = "'+ car_wedge_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$wedge = "'+ car_wedge_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_wedge", car_wedge_action)
+
+  #3 Setting ball option
+  car_ball_action = RBA::Action::new
+  car_ball_action.title = "ball"
+  car_ball_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$ball = \"true\"")
+      car_ball_action.checked=(true)
+    else
+      car_ball_action.checked=(false)
+    end
+  }
+  car_ball_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_ball_action.is_checked?
+        car_ball_bool = "true"
+      else
+        car_ball_bool = "false"
+      end
+      if text.include?("$ball")
+        new_contents = text.gsub(/\$ball = \".*\"/, '$ball = "'+ car_ball_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$ball = "'+ car_ball_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_ball", car_ball_action)
+
+  #4 Setting gold option
+  car_gold_action = RBA::Action::new
+  car_gold_action.title = "gold"
+  car_gold_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$gold = \"true\"")
+      car_gold_action.checked=(true)
+    else
+      car_gold_action.checked=(false)
+    end
+  }
+  car_gold_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_gold_action.is_checked?
+        car_gold_bool = "true"
+      else
+        car_gold_bool = "false"
+      end
+      if text.include?("$gold")
+        new_contents = text.gsub(/\$gold = \".*\"/, '$gold = "'+ car_gold_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$gold = "'+ car_gold_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_gold", car_gold_action)
+
+  #5 Setting MIM option
+  car_mim_action = RBA::Action::new
+  car_mim_action.title = "MIM option"
+  car_mim_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      car_mim_select = RBA::InputDialog::ask_item("MIM option", "Select MIM option:", [ "A", "B" ], 1)
+      if car_mim_select 
+        if text.include?("$mim_option")
+          new_contents = text.gsub(/\$mim_option = \".*\"/, '$mim_option = "'+ car_mim_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$mim_option = "'+ car_mim_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_mim", car_mim_action)
+
+  #6 Setting OFFGRID rules
+  car_offgrid_action = RBA::Action::new
+  car_offgrid_action.title = "OFFGRID Rules"
+  car_offgrid_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$offgrid = \"true\"")
+      car_offgrid_action.checked=(true)
+    else
+      car_offgrid_action.checked=(false)
+    end
+  }
+  car_offgrid_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_offgrid_action.is_checked?
+        car_offgrid_bool = "true"
+      else
+        car_offgrid_bool = "false"
+      end
+      if text.include?("$offgrid")
+        new_contents = text.gsub(/\$offgrid = \".*\"/, '$offgrid = "'+ car_offgrid_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$offgrid = "'+ car_offgrid_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_offgrid", car_offgrid_action)
+
+  #7 Setting verbose
+  car_verbose_action = RBA::Action::new
+  car_verbose_action.title = "Verbose"
+  car_verbose_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$verbose = \"true\"")
+      car_verbose_action.checked=(true)
+    else
+      car_verbose_action.checked=(false)
+    end
+  }
+  car_verbose_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_verbose_action.is_checked?
+        car_verbose_bool = "true"
+      else
+        car_verbose_bool = "false"
+      end
+      if text.include?("$verbose")
+        new_contents = text.gsub(/\$verbose = \".*\"/, '$verbose = "'+ car_verbose_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$verbose = "'+ car_verbose_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_verbose", car_verbose_action)
+
+  #8 Setting run mode
+  car_run_action = RBA::Action::new
+  car_run_action.title = "Run mode"
+  car_run_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      car_run_select = RBA::InputDialog::ask_item("Run mode", "Select run mode:", [ "tiling", "deep", "flat" ], 2)
+      if car_run_select 
+        if text.include?("$run_mode")
+          new_contents = text.gsub(/\$run_mode = \".*\"/, '$run_mode = "'+ car_run_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$run_mode = "'+ car_run_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_run", car_run_action)
+
+  #9 Setting metal top
+  car_top_action = RBA::Action::new
+  car_top_action.title = "Metal top"
+  car_top_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      car_top_select = RBA::InputDialog::ask_item("Metal top", "Select metal top:", [ "6K", "9K", "11K", "30K" ], 1)
+      if car_top_select 
+        if text.include?("$metal_top")
+          new_contents = text.gsub(/\$metal_top = \".*\"/, '$metal_top = "'+ car_top_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_top = "'+ car_top_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_top", car_top_action)
+
+  #10 Setting metal level
+  car_level_action = RBA::Action::new
+  car_level_action.title = "Metal level"
+  car_level_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      car_level_select = RBA::InputDialog::ask_item("Metal level", "Select metal level:", [ "3LM", "4LM", "5LM", "6LM" ], 2)
+      if car_level_select 
+        if text.include?("$metal_level")
+          new_contents = text.gsub(/\$metal_level = \".*\"/, '$metal_level = "'+ car_level_select + '"')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/(\# \%.*drc)/m, '$metal_level = "'+ car_level_select +'"' +"\n"+'\1')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_level", car_level_action)
+
+  #11 Setting FEOL rules
+  car_feol_action = RBA::Action::new
+  car_feol_action.title = "FEOL Rules"
+  car_feol_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$feol = \"true\"")
+      car_feol_action.checked=(true)
+    else
+      car_feol_action.checked=(false)
+    end
+  }
+  car_feol_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_feol_action.is_checked?
+        car_feol_bool = "true"
+      else
+        car_feol_bool = "false"
+      end
+      if text.include?("$feol")
+        new_contents = text.gsub(/\$feol = \".*\"/, '$feol = "'+ car_feol_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$feol = "'+ car_feol_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_feol", car_feol_action)
+
+  #12 Setting BEOL rules
+  car_beol_action = RBA::Action::new
+  car_beol_action.title = "BEOL Rules"
+  car_beol_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("$beol = \"true\"")
+      car_beol_action.checked=(true)
+    else
+      car_beol_action.checked=(false)
+    end
+  }
+  car_beol_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180drc_drc_caravel.lydrc", 'w') { |f| 
+      text = File.read(f)
+      if car_beol_action.is_checked?
+        car_beol_bool = "true"
+      else
+        car_beol_bool = "false"
+      end
+      if text.include?("$beol")
+        new_contents = text.gsub(/\$beol = \".*\"/, '$beol = "'+ car_beol_bool + '"')
+        File.open(f, "w") {|file| file.puts new_contents }
+      else
+        new_contents = text.gsub(/(\# \%.*lvs)/m, '$beol = "'+ car_beol_bool +'"' +"\n"+'\1')
+        File.open(f, "w") {|file| file.puts new_contents }
+      end
+    }
+  end
+  mw.menu.insert_item("gf180drc.car_menu.end", "car_beol", car_beol_action)
+
+  #####################################################################################
+
+end
+
+
+</text>
+</klayout-macro>

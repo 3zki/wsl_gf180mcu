@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>Run KLayout DRC - DRC</description>
+ <version>0.1</version>
+ <category>drc</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path>gf180drc&gt;end("gf180mcu DRC").end</menu-path>
+ <interpreter>dsl</interpreter>
+ <dsl-interpreter-name>drc-dsl-xml</dsl-interpreter-name>
+ <text>
+# Copyright 2022 SkyWater PDK Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+$conn_drc = "true"
+$wedge = "false"
+$ball = "false"
+$gold = "false"
+$mim_option = "B"
+$offgrid = "true"
+$verbose = "false"
+$run_mode = "flat"
+$metal_top = "9K"
+$metal_level = "5LM"
+$feol = "true"
+$beol = "true"
+# %include ../drc/rule_decks/main.drc
+# %include ../drc/rule_decks/comp.drc
+# %include ../drc/rule_decks/contact.drc
+# %include ../drc/rule_decks/dnwell.drc
+# %include ../drc/rule_decks/drc_bjt.drc
+# %include ../drc/rule_decks/dualgate.drc
+# %include ../drc/rule_decks/dummy_exclude.drc
+# %include ../drc/rule_decks/efuse.drc
+# %include ../drc/rule_decks/esd.drc
+# %include ../drc/rule_decks/hres.drc
+# %include ../drc/rule_decks/ldnmos.drc
+# %include ../drc/rule_decks/ldpmos.drc
+# %include ../drc/rule_decks/lres.drc
+# %include ../drc/rule_decks/lvpwell.drc
+# %include ../drc/rule_decks/lvs_bjt.drc
+# %include ../drc/rule_decks/mcell.drc
+# %include ../drc/rule_decks/metal1.drc
+# %include ../drc/rule_decks/metal2.drc
+# %include ../drc/rule_decks/metal3.drc
+# %include ../drc/rule_decks/metal4.drc
+# %include ../drc/rule_decks/metal5.drc
+# %include ../drc/rule_decks/metaltop.drc
+# %include ../drc/rule_decks/metaltop_30k.drc
+# %include ../drc/rule_decks/mim_a.drc
+# %include ../drc/rule_decks/mim_b.drc
+# %include ../drc/rule_decks/nat.drc
+# %include ../drc/rule_decks/nplus.drc
+# %include ../drc/rule_decks/nwell.drc
+# %include ../drc/rule_decks/otp_mk.drc
+# %include ../drc/rule_decks/poly2.drc
+# %include ../drc/rule_decks/pplus.drc
+# %include ../drc/rule_decks/pres.drc
+# %include ../drc/rule_decks/sab.drc
+# %include ../drc/rule_decks/sram_3p3.drc
+# %include ../drc/rule_decks/sram_5p0.drc
+# %include ../drc/rule_decks/via1.drc
+# %include ../drc/rule_decks/via2.drc
+# %include ../drc/rule_decks/via3.drc
+# %include ../drc/rule_decks/via4.drc
+# %include ../drc/rule_decks/via5.drc
+# %include ../drc/rule_decks/ymtp_mk.drc
+</text>
+</klayout-macro>

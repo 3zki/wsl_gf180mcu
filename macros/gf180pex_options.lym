@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>Set Options (Restart required!)</description>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path>gf180pex&gt;end("gf180mcu PEX").end</menu-path>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text># Copyright 2022 SkyWater PDK Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+ module MyMacro
+ 
+  include RBA
+
+
+  #####################################################################################
+  # Loading options
+  #####################################################################################
+  mw = RBA::MainWindow::instance
+
+  # create a toolbar gf180pex
+  mw.menu.insert_menu("gf180pex.end", "rc_menu", "Magic PEX - RC extraction Options")
+  mw.menu.insert_menu("gf180pex.end", "c_menu", "Magic PEX - C extraction Options")
+
+  #####################################################################################
+  # Adding Magic PEX(RC) options
+  #####################################################################################
+  
+  #1 Setting Combine devices
+  combine_pex_action = RBA::Action::new
+  combine_pex_action.title = "Combine devices"
+  combine_pex_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("combine = \"-M \"")
+      combine_pex_action.checked=(true)
+    else
+      combine_pex_action.checked=(false)
+    end
+  }
+  combine_pex_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+      text = File.read(f)
+      if combine_pex_action.is_checked?
+        combine_bool = "-M "
+      else
+        combine_bool = ""
+      end
+      new_contents = text.gsub(/combine = \".*\"/, 'combine = "'+ combine_bool + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.rc_menu.end", "combine_pex", combine_pex_action)
+  
+  #2 Setting Distribute area and perimeter
+  distrib_pex_action = RBA::Action::new
+  distrib_pex_action.title = "Distribute area and perimeter"
+  distrib_pex_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("distrib = \"-d \"")
+      distrib_pex_action.checked=(true)
+    else
+      distrib_pex_action.checked=(false)
+    end
+  }
+  distrib_pex_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+      text = File.read(f)
+      if distrib_pex_action.is_checked?
+        distrib_bool = "-d "
+      else
+        distrib_bool = ""
+      end
+      new_contents = text.gsub(/distrib = \".*\"/, 'distrib = "'+ distrib_bool + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.rc_menu.end", "distrib_pex", distrib_pex_action)
+  
+  #3 Setting Less attributes
+  no_attr_pex_action = RBA::Action::new
+  no_attr_pex_action.title = "Less attributes"
+  no_attr_pex_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("no_attr = \"-B \"")
+      no_attr_pex_action.checked=(true)
+    else
+      no_attr_pex_action.checked=(false)
+    end
+  }
+  no_attr_pex_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+      text = File.read(f)
+      if no_attr_pex_action.is_checked?
+        no_attr_bool = "-B "
+      else
+        no_attr_bool = ""
+      end
+      new_contents = text.gsub(/no_attr = \".*\"/, 'no_attr = "'+ no_attr_bool + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.rc_menu.end", "no_attr_pex", no_attr_pex_action)
+  
+  #4 Setting Purge nets
+  purge_pex_action = RBA::Action::new
+  purge_pex_action.title = "Purge nets"
+  purge_pex_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("purge = \"-F \"")
+      purge_pex_action.checked=(true)
+    else
+      purge_pex_action.checked=(false)
+    end
+  }
+  purge_pex_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+      text = File.read(f)
+      if purge_pex_action.is_checked?
+        purge_bool = "-F "
+      else
+        purge_bool = ""
+      end
+      new_contents = text.gsub(/purge = \".*\"/, 'purge = "'+ purge_bool + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.rc_menu.end", "purge_pex", purge_pex_action)
+
+
+  #5.1 Setting Trimmed characters - #
+  trim_hash_pex_action = RBA::Action::new
+  trim_hash_pex_action.title = "Trimmed characters - \#"
+  trim_hash_pex_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("trim_hash = \"-t # \"")
+      trim_hash_pex_action.checked=(true)
+    else
+      trim_hash_pex_action.checked=(false)
+    end
+  }
+  trim_hash_pex_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+      text = File.read(f)
+      if trim_hash_pex_action.is_checked?
+        trim_hash_bool = "-t # "
+      else
+        trim_hash_bool = ""
+      end
+      new_contents = text.gsub(/trim_hash = \".*\"/, 'trim_hash = "'+ trim_hash_bool + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.rc_menu.end", "trim_hash_pex", trim_hash_pex_action)
+
+  #5.2 Setting Trimmed characters - !
+  trim_exclam_pex_action = RBA::Action::new
+  trim_exclam_pex_action.title = "Trimmed characters - \!"
+  trim_exclam_pex_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("trim_exclam = \"-t ! \"")
+      trim_exclam_pex_action.checked=(true)
+    else
+      trim_exclam_pex_action.checked=(false)
+    end
+  }
+  trim_exclam_pex_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+      text = File.read(f)
+      if trim_exclam_pex_action.is_checked?
+        trim_exclam_bool = "-t ! "
+      else
+        trim_exclam_bool = ""
+      end
+      new_contents = text.gsub(/trim_exclam = \".*\"/, 'trim_exclam = "'+ trim_exclam_bool + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.rc_menu.end", "trim_exclam_pex", trim_exclam_pex_action)
+
+  #6 Setting Run mode
+  run_mode_pex_action = RBA::Action::new
+  run_mode_pex_action.title = "Run mode"
+  run_mode_pex_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex.lym", 'w') { |f| 
+      text = File.read(f)
+      run_mode_pex_select = RBA::InputDialog::ask_item("Run mode", "Select running mode:", [ "hier", "flat"], 1)
+      if run_mode_pex_select
+        if run_mode_pex_select == "hier"
+          new_contents = text.gsub(/mode = \".*\"/, 'mode = "-J '+ run_mode_pex_select + ' "')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/mode = \".*\"/, 'mode = "-J '+ run_mode_pex_select + ' "')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180pex.rc_menu.end", "run_mode_pex", run_mode_pex_action)
+
+  #####################################################################################
+  # Adding Magic PEX(C) options
+  #####################################################################################
+  
+  #1 Setting Combine devices
+  combine_pex_c_action = RBA::Action::new
+  combine_pex_c_action.title = "Combine devices"
+  combine_pex_c_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("combine = \"-M \"")
+      combine_pex_c_action.checked=(true)
+    else
+      combine_pex_c_action.checked=(false)
+    end
+  }
+  combine_pex_c_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+      text = File.read(f)
+      if combine_pex_c_action.is_checked?
+        combine_bool_c = "-M "
+      else
+        combine_bool_c = ""
+      end
+      new_contents = text.gsub(/combine = \".*\"/, 'combine = "'+ combine_bool_c + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.c_menu.end", "combine_pex_c", combine_pex_c_action)
+  
+  #2 Setting Distribute area and perimeter
+  distrib_pex_c_action = RBA::Action::new
+  distrib_pex_c_action.title = "Distribute area and perimeter"
+  distrib_pex_c_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("distrib = \"-d \"")
+      distrib_pex_c_action.checked=(true)
+    else
+      distrib_pex_c_action.checked=(false)
+    end
+  }
+  distrib_pex_c_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+      text = File.read(f)
+      if distrib_pex_c_action.is_checked?
+        distrib_bool_c = "-d "
+      else
+        distrib_bool_c = ""
+      end
+      new_contents = text.gsub(/distrib = \".*\"/, 'distrib = "'+ distrib_bool_c + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.c_menu.end", "distrib_pex_c", distrib_pex_c_action)
+  
+  #3 Setting Less attributes
+  no_attr_pex_c_action = RBA::Action::new
+  no_attr_pex_c_action.title = "Less attributes"
+  no_attr_pex_c_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("no_attr = \"-B \"")
+      no_attr_pex_c_action.checked=(true)
+    else
+      no_attr_pex_c_action.checked=(false)
+    end
+  }
+  no_attr_pex_c_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+      text = File.read(f)
+      if no_attr_pex_c_action.is_checked?
+        no_attr_bool_c = "-B "
+      else
+        no_attr_bool_c = ""
+      end
+      new_contents = text.gsub(/no_attr = \".*\"/, 'no_attr = "'+ no_attr_bool_c + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.c_menu.end", "no_attr_pex_c", no_attr_pex_c_action)
+  
+  #4 Setting Purge nets
+  purge_pex_c_action = RBA::Action::new
+  purge_pex_c_action.title = "Purge nets"
+  purge_pex_c_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("purge = \"-F \"")
+      purge_pex_c_action.checked=(true)
+    else
+      purge_pex_c_action.checked=(false)
+    end
+  }
+  purge_pex_c_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+      text = File.read(f)
+      if purge_pex_c_action.is_checked?
+        purge_bool_c = "-F "
+      else
+        purge_bool_c = ""
+      end
+      new_contents = text.gsub(/purge = \".*\"/, 'purge = "'+ purge_bool_c + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.c_menu.end", "purge_pex_c", purge_pex_c_action)
+
+
+  #5.1 Setting Trimmed characters - #
+  trim_hash_pex_c_action = RBA::Action::new
+  trim_hash_pex_c_action.title = "Trimmed characters - \#"
+  trim_hash_pex_c_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("trim_hash = \"-t # \"")
+      trim_hash_pex_c_action.checked=(true)
+    else
+      trim_hash_pex_c_action.checked=(false)
+    end
+  }
+  trim_hash_pex_c_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+      text = File.read(f)
+      if trim_hash_pex_c_action.is_checked?
+        trim_hash_bool_c = "-t # "
+      else
+        trim_hash_bool_c = ""
+      end
+      new_contents = text.gsub(/trim_hash = \".*\"/, 'trim_hash = "'+ trim_hash_bool_c + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.c_menu.end", "trim_hash_pex_c", trim_hash_pex_c_action)
+
+  #5.2 Setting Trimmed characters - !
+  trim_exclam_pex_c_action = RBA::Action::new
+  trim_exclam_pex_c_action.title = "Trimmed characters - \!"
+  trim_exclam_pex_c_action.checkable=(true)
+  File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+    text = File.read(f)
+    if text.include?("trim_exclam = \"-t ! \"")
+      trim_exclam_pex_c_action.checked=(true)
+    else
+      trim_exclam_pex_c_action.checked=(false)
+    end
+  }
+  trim_exclam_pex_c_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+      text = File.read(f)
+      if trim_exclam_pex_c_action.is_checked?
+        trim_exclam_bool_c = "-t ! "
+      else
+        trim_exclam_bool_c = ""
+      end
+      new_contents = text.gsub(/trim_exclam = \".*\"/, 'trim_exclam = "'+ trim_exclam_bool_c + '"')
+      File.open(f, "w") {|file| file.puts new_contents }
+    }
+  end
+  mw.menu.insert_item("gf180pex.c_menu.end", "trim_exclam_pex_c", trim_exclam_pex_c_action)
+
+  #6 Setting Run mode
+  run_mode_pex_c_action = RBA::Action::new
+  run_mode_pex_c_action.title = "Run mode"
+  run_mode_pex_c_action.on_triggered do
+    File.open(File.expand_path File.dirname(__FILE__) + "/gf180pex_magic_pex_c.lym", 'w') { |f| 
+      text = File.read(f)
+      run_mode_pex_c_select = RBA::InputDialog::ask_item("Run mode", "Select running mode:", [ "hier", "flat"], 1)
+      if run_mode_pex_c_select
+        if run_mode_pex_c_select == "hier"
+          new_contents = text.gsub(/mode = \".*\"/, 'mode = "-J '+ run_mode_pex_c_select + ' "')
+          File.open(f, "w") {|file| file.puts new_contents }
+        else
+          new_contents = text.gsub(/mode = \".*\"/, 'mode = "-J '+ run_mode_pex_c_select + ' "')
+          File.open(f, "w") {|file| file.puts new_contents }
+        end
+      end
+    }
+  end
+  mw.menu.insert_item("gf180pex.c_menu.end", "run_mode_pex_c", run_mode_pex_c_action)
+
+  #####################################################################################
+
+end
+
+
+</text>
+</klayout-macro>
