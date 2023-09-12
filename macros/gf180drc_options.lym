@@ -43,7 +43,7 @@
   # create a toolbar gf180drc
   mw.menu.insert_menu("gf180drc.end", "ant_menu", "KLayout DRC - Antenna Options")
   mw.menu.insert_menu("gf180drc.end", "den_menu", "KLayout DRC - Density Options")
-  mw.menu.insert_menu("gf180drc.end", "drc_menu", "KLayout DRC - DRC Options")
+  mw.menu.insert_menu("gf180drc.end", "drc_menu", "KLayout DRC - Full DRC Options")
   mw.menu.insert_menu("gf180drc.end", "car_menu", "KLayout DRC - Caravel DRC Options")
 
   #####################################################################################

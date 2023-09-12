@@ -60,7 +60,10 @@ if [ ! -d "$HOME/.klayout" ]; then
 	# cp -rf klayout $HOME/.klayout
 	mkdir $HOME/.klayout
 	cp -f klayoutrc $HOME/.klayout
+	cp -rf lvs $HOME/.klayout/lvs
 	cp -rf macros $HOME/.klayout/macros
+	cp -rf pymacros $HOME/.klayout/pymacros
+	cp -rf tech $HOME/.klayout/tech
 	mkdir $HOME/.klayout/libraries
 fi
 
@@ -151,7 +154,7 @@ echo ">>>> Installing KLayout-$KLAYOUT_VERSION"
 wget https://www.klayout.org/downloads/Ubuntu-22/klayout_$KLAYOUT_VERSION-1_amd64.deb
 sudo apt -qq install -y ./klayout_$KLAYOUT_VERSION-1_amd64.deb
 rm klayout_$KLAYOUT_VERSION-1_amd64.deb
-pip install docopt pandas gdsfactory
+pip install docopt pandas gdsfactory gf180
 
 # Install/update magic
 # --------------------
@@ -240,16 +243,16 @@ export PDK=$PDK
 export STD_CELL_LIBRARY=$MY_STDCELL
 cp -f $PDK_ROOT/$PDK/libs.tech/xschem/xschemrc $HOME/.xschem
 cp -f $PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc $HOME/.magicrc
-mkdir $HOME/.klayout/
+# mkdir $HOME/.klayout/
 cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/drc $HOME/.klayout/drc
-cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/lvs $HOME/.klayout/lvs
-mkdir $HOME/.klayout/pymacros/
-cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/pymacros $HOME/.klayout/pymacros/cells
-cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/tech $HOME/.klayout/tech
+# cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/lvs $HOME/.klayout/lvs
+# mkdir $HOME/.klayout/pymacros/
+# cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/pymacros $HOME/.klayout/pymacros/cells
+# cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/tech $HOME/.klayout/tech
 # --------
-cp -f $PDK_ROOT/$PDK/libs.tech/klayout/tech/gf180mcu.lym  $HOME/.klayout/pymacros/gf180mcu.lym
+# cp -f $PDK_ROOT/$PDK/libs.tech/klayout/tech/gf180mcu.lym  $HOME/.klayout/pymacros/gf180mcu.lym
 # --------
-mkdir $HOME/.klayout/libraries/
+# mkdir $HOME/.klayout/libraries/
 cp -f $PDK_ROOT/$PDK/libs.ref/gf180mcu_fd_sc_mcu7t5v0/gds/gf180mcu_fd_sc_mcu7t5v0.gds $HOME/.klayout/libraries/
 cp -f $PDK_ROOT/$PDK/libs.ref/gf180mcu_fd_sc_mcu9t5v0/gds/gf180mcu_fd_sc_mcu9t5v0.gds $HOME/.klayout/libraries/
 
