@@ -154,7 +154,7 @@ echo ">>>> Installing KLayout-$KLAYOUT_VERSION"
 wget https://www.klayout.org/downloads/Ubuntu-22/klayout_$KLAYOUT_VERSION-1_amd64.deb
 sudo apt -qq install -y ./klayout_$KLAYOUT_VERSION-1_amd64.deb
 rm klayout_$KLAYOUT_VERSION-1_amd64.deb
-pip install docopt pandas gdsfactory gf180
+pip install docopt pandas gdsfactory
 
 # Install/update magic
 # --------------------
@@ -267,6 +267,9 @@ echo 'puts stderr "180MCU_STDCELLS: $180MCU_STDCELLS"' >> "$HOME/.xschem/xschemr
 # --------
 sudo apt -qq install -y gnome-terminal
 systemctl --user start gnome-terminal-server
+
+# setup pip gf180 to avoid pcell bugs...
+pip install gf180
 
 # Finished
 # --------
