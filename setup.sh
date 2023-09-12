@@ -259,9 +259,9 @@ cp -f $PDK_ROOT/$PDK/libs.ref/gf180mcu_fd_sc_mcu9t5v0/gds/gf180mcu_fd_sc_mcu9t5v
 
 # Fix paths in xschemrc to point to correct PDK directory
 # -------------------------------------------------------
-sed -i 's/models\/ngspice/gf180mcuA\/libs.tech\/ngspice/g' "$HOME/.xschem/xschemrc"
-echo 'append XSCHEM_LIBRARY_PATH :${PDK_ROOT}/gf180mcuA/libs.tech/xschem' >> "$HOME/.xschem/xschemrc"
-echo 'set 180MCU_STDCELLS ${PDK_ROOT}/gf180mcuA/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice' >> "$HOME/.xschem/xschemrc"
+sed -i 's/models\/ngspice/gf180mcuC\/libs.tech\/ngspice/g' "$HOME/.xschem/xschemrc"
+echo 'append XSCHEM_LIBRARY_PATH :${PDK_ROOT}/gf180mcuC/libs.tech/xschem' >> "$HOME/.xschem/xschemrc"
+echo 'set 180MCU_STDCELLS ${PDK_ROOT}/gf180mcuC/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice' >> "$HOME/.xschem/xschemrc"
 echo 'puts stderr "180MCU_STDCELLS: $180MCU_STDCELLS"' >> "$HOME/.xschem/xschemrc"
 
 # setup gnome-terminal
