@@ -79,6 +79,15 @@ logger.info('Starting GF180 LVS connectivity setup (Global)')
 # Global
 connect_global(sub, substrate_name)
 
+logger.info('Starting GF180 LVS connectivity setup (Dual/Triple well)')
+
+# Dual-well connection:
+connect(sub, dual_tap)
+connect(dual_tap, lvpwell_con)
+# Triple-well connection:
+connect(dnwell, triple_tap)
+connect(triple_tap, nwell)
+
 logger.info('Starting GF180 LVS connectivity setup (Multifinger Devices)')
 
 # Multifinger Devices

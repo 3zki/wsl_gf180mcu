@@ -41,6 +41,9 @@ nwell_con       = nwell.not(res_mk)
 lvpwell_con     = lvpwell.not(res_mk)
 poly2_con       = poly2.not(res_mk).not(plfuse)
 
+dual_tap	= lvpwell.not(dnwell)
+triple_tap	= nwell.and(dnwell)
+
 pgate_lv_base = pgate.not(v5_xtor).not(dualgate)
 pgate_5v_base = pgate.and(v5_xtor).and(dualgate)
 pgate_6v_base = pgate.not(v5_xtor).and(dualgate)
