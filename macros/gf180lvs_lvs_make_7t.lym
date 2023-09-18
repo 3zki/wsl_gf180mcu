@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description>Make netlist (MCU7T5V0) for Klayout LVS</description>
+ <version/>
+ <category/>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>true</show-in-menu>
+ <group-name/>
+ <menu-path>gf180lvs&gt;end("gf180mcu LVS").end</menu-path>
+ <interpreter>ruby</interpreter>
+ <dsl-interpreter-name/>
+ <text>module MyMacro
+ 
+  include RBA
+
+  # Options
+  simpath = "~/.xschem/simulations"
+  tempname = "lvs_temp.temp"
+  filename = "lvs_temp.cdl"
+  workdir = "~/.klayout"
+  # End Options
+
+  gds_base = File.basename(RBA::Application.instance.main_window.current_view.active_cellview.filename, ".*")
+  gds_dir = File.expand_path(File.dirname(RBA::Application.instance.main_window.current_view.active_cellview.filename))
+  cell_name = RBA::CellView::active.cell_name
+  system( "rm -rf #{gds_dir}/#{filename}" )
+  system( "cp -f #{simpath}/#{gds_base}.spice #{gds_dir}/#{tempname}" )
+  system( "sed -i -e 's/.subckt #{gds_base}/.subckt #{cell_name}/g' #{gds_dir}/#{tempname}" )
+  system( "sed -i -z 's/.end$/ /g' #{gds_dir}/#{tempname}" )
+  system( "sed -i -z 's/.end\\n/ /g' #{gds_dir}/#{tempname}" )
+  system( "gnome-terminal --title=Netlist --working-directory=#{gds_dir} -- sh -c 'cat #{gds_dir}/#{tempname}; read line'" )
+  system( "cat #{gds_dir}/#{tempname} #{workdir}/macros/mcu7t5v0.cdl > #{gds_dir}/#{filename}" )
+  # system( "gnome-terminal --title=Netlist --working-directory=#{gds_dir} -- sh -c 'cat #{gds_dir}/#{filename}; read line'" )
+  system( "rm -rf #{gds_dir}/#{tempname}" )
+end
+</text>
+</klayout-macro>
