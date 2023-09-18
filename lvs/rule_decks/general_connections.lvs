@@ -87,7 +87,7 @@ connect(sub, dual_tap)
 connect(dual_tap, lvpwell_con)
 # Triple-well connection:
 connect(dnwell, triple_tap)
-connect(triple_tap, nwell)
+connect(triple_tap, nwell_con)
 
 logger.info('Starting GF180 LVS connectivity setup (Multifinger Devices)')
 
