@@ -37,6 +37,7 @@ connect(poly2_con, contact)
 connect(contact, metal1_con)
 connect(metal1_con, via1)
 connect(via1, metal2_con)
+connect(metal2_con, metal2_label)
 
 case METAL_LEVEL
 when '3LM', '4LM', '5LM', '6LM'
@@ -86,7 +87,7 @@ connect(sub, dual_tap)
 connect(dual_tap, lvpwell_con)
 # Triple-well connection:
 connect(dnwell, triple_tap)
-connect(triple_tap, nwell_con)
+connect(triple_tap, nwell)
 
 logger.info('Starting GF180 LVS connectivity setup (Multifinger Devices)')
 
