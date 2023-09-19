@@ -28,7 +28,7 @@
   cell_name = RBA::CellView::active.cell_name
 
   system( "cp -f #{simpath}/#{gds_base}.spice #{gds_dir}/#{filename}" )
-  system( "sed -i -e 's/#{gds_base}/#{cell_name}/g' #{gds_dir}/#{filename}" )
+  system( "sed -i -e 's/.subckt #{gds_base}/.subckt #{cell_name}/g' #{gds_dir}/#{filename}" )
   system( "gnome-terminal --title=Netlist --working-directory=#{gds_dir} -- sh -c 'cat #{gds_dir}/#{filename}; read line'" )
 end
 </text>
