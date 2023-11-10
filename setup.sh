@@ -30,9 +30,9 @@ export SRC_DIR="$HOME/src"
 my_path=$(realpath "$0")
 my_dir=$(dirname "$my_path")
 export SCRIPT_DIR="$my_dir"
-export KLAYOUT_VERSION=0.28.11
-export PDK=gf180mcuC
-export VOLARE_H=1341f54f5ce0c4955326297f235e4ace1eb6d419
+export KLAYOUT_VERSION=0.28.12
+export PDK=gf180mcuD
+export VOLARE_H=e0f692f46654d6c7c99fc70a0c94a080dab53571
 
 # ---------------
 # Now go to work!
@@ -259,9 +259,9 @@ cp -f $PDK_ROOT/$PDK/libs.ref/gf180mcu_fd_sc_mcu9t5v0/gds/gf180mcu_fd_sc_mcu9t5v
 
 # Fix paths in xschemrc to point to correct PDK directory
 # -------------------------------------------------------
-sed -i 's/models\/ngspice/gf180mcuC\/libs.tech\/ngspice/g' "$HOME/.xschem/xschemrc"
-echo 'append XSCHEM_LIBRARY_PATH :${PDK_ROOT}/gf180mcuC/libs.tech/xschem' >> "$HOME/.xschem/xschemrc"
-echo 'set 180MCU_STDCELLS ${PDK_ROOT}/gf180mcuC/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice' >> "$HOME/.xschem/xschemrc"
+sed -i 's/models\/ngspice/gf180mcuD\/libs.tech\/ngspice/g' "$HOME/.xschem/xschemrc"
+echo 'append XSCHEM_LIBRARY_PATH :${PDK_ROOT}/gf180mcuD/libs.tech/xschem' >> "$HOME/.xschem/xschemrc"
+echo 'set 180MCU_STDCELLS ${PDK_ROOT}/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice' >> "$HOME/.xschem/xschemrc"
 echo 'puts stderr "180MCU_STDCELLS: $180MCU_STDCELLS"' >> "$HOME/.xschem/xschemrc"
 
 # setup gnome-terminal
