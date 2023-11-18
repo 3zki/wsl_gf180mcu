@@ -1823,7 +1823,7 @@ limitations under the License.
   <fill-brightness>0</fill-brightness>
   <dither-pattern>C0</dither-pattern>
   <line-style>C7</line-style>
-  <valid>false</valid>
+  <valid>true</valid>
   <visible>true</visible>
   <transparent>false</transparent>
   <width>2</width>
@@ -1831,7 +1831,7 @@ limitations under the License.
   <xfill>false</xfill>
   <animation>0</animation>
   <name/>
-  <source>IO_MK 23/5@1</source>
+  <source>ISO_SUB 23/5@1</source>
  </properties>
  <properties>
   <frame-color>#888888</frame-color>
