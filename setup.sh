@@ -89,6 +89,13 @@ sudo apt -qq install -y build-essential python3-pip
 # octave octave-signal octave-communications octave-control
 # htop mc gedit vim vim-gtk3 kdiff3
 
+# setup gnome-terminal
+# --------
+if [ ! -d "$SRC_DIR" ]; then
+	sudo apt -qq install -y gnome-terminal
+	systemctl --user start gnome-terminal-server
+fi
+
 # Create PDK directory if it does not yet exist
 # ---------------------------------------------
 if [ -d "$PDK_ROOT" ]; then
@@ -271,13 +278,6 @@ sed -i 's/models\/ngspice/$env(PDK)\/libs.tech\/ngspice/g' "$HOME/.xschem/xschem
 # echo 'append XSCHEM_LIBRARY_PATH :${PDK_ROOT}/$env(PDK)/libs.tech/xschem' >> "$HOME/.xschem/xschemrc"
 echo 'set 180MCU_STDCELLS ${PDK_ROOT}/$env(PDK)/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice' >> "$HOME/.xschem/xschemrc"
 echo 'puts stderr "180MCU_STDCELLS: $180MCU_STDCELLS"' >> "$HOME/.xschem/xschemrc"
-
-# setup gnome-terminal
-# --------
-if [ ! -d "$SRC_DIR" ]; then
-	sudo apt -qq install -y gnome-terminal
-	systemctl --user start gnome-terminal-server
-fi
 
 # Finished
 # --------
