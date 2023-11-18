@@ -40,10 +40,11 @@ Example:
 
 - `--netlist=<netlist_path>`            The input netlist file path.
 
-- `--variant=<combined_options>`        Select combined options of metal_top, mim_option, and metal_level. Allowed values (A, B, C).
+- `--variant=<combined_options>`        Select combined options of metal_top, mim_option, and metal_level. Allowed values (A, B, C, D).
   - variant=A: Select  metal_top=30K  mim_option=A  metal_level=3LM  poly_res=1K, and mim_cap=2
   - variant=B: Select  metal_top=11K  mim_option=B  metal_level=4LM  poly_res=1K, and mim_cap=2
   - variant=C: Select  metal_top=9K   mim_option=B  metal_level=5LM  poly_res=1K, and mim_cap=2
+  - variant=D: Select  metal_top=11K  mim_option=B  metal_level=5LM  poly_res=1K, and mim_cap=2
 
 - `--thr=<thr>`                         The number of threads used in run.
 

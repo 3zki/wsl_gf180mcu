@@ -34,7 +34,7 @@
 
 $verbose = "false"
 $run_mode = "flat"
-$metal_top = "9K"
+$metal_top = "11K"
 $metal_level = "5LM"
 # %include ../drc/rule_decks/density.drc
 </text>

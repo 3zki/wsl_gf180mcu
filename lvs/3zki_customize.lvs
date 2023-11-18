@@ -1,0 +1,53 @@
+##
+## COMPLAIANT WINDOW: github.com/3zki
+##
+
+##
+## Import this rules before devices_connections.lvs
+##
+
+## ---------------------------------------
+## customized layers_definitions.lvs
+## ---------------------------------------
+nwell_label = labels(21, 10)
+count = nwell_label.count
+logger.info("nwell_label has #{count} polygons")
+polygons_count += count
+
+lvpwell_label = labels(204, 10)
+count = lvpwell_label.count
+logger.info("lvpwell_label has #{count} polygons")
+polygons_count += count
+
+pad_label = labels(37, 10)
+count = pad_label.count
+logger.info("pad_label has #{count} polygons")
+
+logger.info("Total no. of polygons in the design is #{polygons_count}")
+
+## ---------------------------------------
+## customized general_derications.lvs
+## ---------------------------------------
+## Technical notes:
+## lvpwell without dnwell should be connected to P-substrate
+## nwell and dnwell should be connected
+dual_tap	= lvpwell.not(dnwell)
+triple_tap	= nwell.and(dnwell)
+
+## ---------------------------------------
+## customized general_connections.lvs
+## ---------------------------------------
+# connect(metal2_con, metal2_label)
+connect(nwell_con, nwell_label)
+connect(lvpwell_con, lvpwell_label)
+connect(pad, pad_label)
+
+logger.info('Starting GF180 LVS connectivity setup (Dual/Triple well)')
+
+# Dual-well connection:
+connect(sub, dual_tap)
+connect(dual_tap, lvpwell_con)
+
+# Triple-well connection:
+connect(dnwell, triple_tap)
+connect(triple_tap, nwell_con)

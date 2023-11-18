@@ -24,11 +24,11 @@ Options:
     --help -h                           Print this help message.
     --layout=<layout_path>              The input GDS file path.
     --netlist=<netlist_path>            The input netlist file path.
-    --variant=<combined_options>        Select combined options of metal_top, mim_option, and metal_level. Allowed values (A, B, C).
+    --variant=<combined_options>        Select combined options of metal_top, mim_option, and metal_level. Allowed values (A, B, C, D).
                                         variant=A: Select  metal_top=30K  mim_option=A  metal_level=3LM  poly_res=1K, and mim_cap=2
                                         variant=B: Select  metal_top=11K  mim_option=B  metal_level=4LM  poly_res=1K, and mim_cap=2
                                         variant=C: Select  metal_top=9K   mim_option=B  metal_level=5LM  poly_res=1K, and mim_cap=2
-                                        variant=D: Select  metal_top=9K   mim_option=B  metal_level=6LM  poly_res=1K, and mim_cap=2
+                                        variant=D: Select  metal_top=11K  mim_option=B  metal_level=5LM  poly_res=1K, and mim_cap=2
     --thr=<thr>                         The number of threads used in run.
     --run_dir=<run_dir_path>            Run directory to save all the results [default: pwd]
     --topcell=<topcell_name>            Topcell name to use.
@@ -217,9 +217,9 @@ def generate_klayout_switches(arguments, layout_path, netlist_path):
         switches["poly_res"] = "1k"
         switches["mim_cap"] = "2"
     elif arguments["--variant"] == "D":
-        switches["metal_top"] = "9K"
+        switches["metal_top"] = "11K"
         switches["mim_option"] = "B"
-        switches["metal_level"] = "6LM"
+        switches["metal_level"] = "5LM"
         switches["poly_res"] = "1k"
         switches["mim_cap"] = "2"
     else:

@@ -65,6 +65,18 @@ if [ ! -d "$HOME/.klayout" ]; then
 	cp -rf pymacros $HOME/.klayout/pymacros
 	cp -rf tech $HOME/.klayout/tech
 	mkdir $HOME/.klayout/libraries
+else
+	rm -rf $HOME/.klayout/drc
+	rm -rf $HOME/.klayout/lvs
+	cp -rf lvs $HOME/.klayout/lvs
+	rm -rf $HOME/.klayout/macros
+	cp -rf macros $HOME/.klayout/macros
+	rm -rf $HOME/.klayout/pymacros
+	cp -rf pymacros $HOME/.klayout/pymacros
+	rm -rf $HOME/.klayout/tech
+	cp -rf tech $HOME/.klayout/tech
+	rm -rf $HOME/.klayout/libraries
+	mkdir $HOME/.klayout/libraries
 fi
 
 # Install basic tools via apt
@@ -80,32 +92,24 @@ sudo apt -qq install -y build-essential python3-pip
 # Create PDK directory if it does not yet exist
 # ---------------------------------------------
 if [ -d "$PDK_ROOT" ]; then
-	echo ">>>> Delete previous PDK"
-	sudo rm -rf $PDK_ROOT
+	sudo mkdir "$PDK_ROOT"
+	sudo chown "$USER:staff" "$PDK_ROOT"
+	cd "$PDK_ROOT" || exit
 fi
 
-# Install PDK
+# Install/update volare
 # ---------------------------------------------
-echo ">>>> Installing PDK"
-sudo mkdir "$PDK_ROOT"
-sudo chown "$USER:staff" "$PDK_ROOT"
-cd "$PDK_ROOT" || exit
+echo ">>>> Installing volare"
 if [ ! -d "$SRC_DIR/volare" ]; then
 	git clone https://github.com/efabless/volare.git "$SRC_DIR/volare"
 	cd "$SRC_DIR/volare" || exit
 else
-	echo ">>>> Updating xschem"
+	echo ">>>> Updating volare"
 	cd "$SRC_DIR/volare" || exit
 	git pull
 fi
 python3 -m pip install --upgrade --no-cache-dir volare
 python3 -m volare enable --pdk gf180mcu $VOLARE_H
-
-# Add IIC custom bindkeys to magicrc file
-# ---------------------------------------
-# echo ">>>> Add custom bindkeys to magicrc"
-# echo "# Custom bindkeys for IIC" 		>> "$PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc"
-# echo "source $SCRIPT_DIR/iic-magic-bindkeys" 	>> "$PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc"
 
 # Install/update xschem
 # ---------------------
@@ -124,7 +128,7 @@ else
 	cd "$SRC_DIR/xschem" || exit
 	git pull
 fi
-make clean
+# make clean
 make -j"$(nproc)" && sudo make install
 make clean
 
@@ -144,7 +148,7 @@ else
         cd "$SRC_DIR/xschem-gaw" || exit
         git pull
 fi
-make clean
+# make clean
 make -j"$(nproc)" && sudo make install
 make clean
 
@@ -172,7 +176,7 @@ else
 	cd "$SRC_DIR/magic" || exit
 	git pull
 fi
-make clean
+# make clean
 make && sudo make install
 make clean
 
@@ -189,7 +193,7 @@ else
 	cd "$SRC_DIR/netgen" || exit
 	git pull
 fi
-make clean
+# make clean
 make -j"$(nproc)" && sudo make install
 make clean
 
@@ -210,34 +214,37 @@ else
         cd "$SRC_DIR/ngspice" || exit
         git pull
 fi
-make clean
+# make clean
 make -j"$(nproc)" && sudo make install
 make clean
 
 # Create .spiceinit
 # -----------------
-# Change the value of num_threads as your environment! 
-{
-	echo "set num_threads=2"
-	echo "set ngbehavior=hsa"
-	echo "set ng_nomodcheck"
-} > "$HOME/.spiceinit"
-
-# Create iic-init.sh
+if [ ! -f "$HOME/.spiceinit" ]; then
+	{
+		echo "set num_threads=$(nproc)"
+		echo "set ngbehavior=hsa"
+		echo "set ng_nomodcheck"
+	} > "$HOME/.spiceinit"
+fi
+# Create .bashrc
 # ------------------
+if [ ! -d "$SRC_DIR" ]; then
+	{
+		echo '#'
+		echo '# (c) 2021-2022 Harald Pretl'
+		echo '# Institute for Integrated Circuits'
+		echo '# Johannes Kepler University Linz'
+		echo '#'
+		echo "export PDK_ROOT=$PDK_ROOT"
+		echo "export PDK=$PDK"
+		echo "export STD_CELL_LIBRARY=$MY_STDCELL"
+	} >> "$HOME/.bashrc"
+fi
+
 if [ ! -d "$HOME/.xschem" ]; then
 	mkdir "$HOME/.xschem"
 fi
-{
-	echo '#'
-	echo '# (c) 2021-2022 Harald Pretl'
-	echo '# Institute for Integrated Circuits'
-	echo '# Johannes Kepler University Linz'
-	echo '#'
-	echo "export PDK_ROOT=$PDK_ROOT"
-	echo "export PDK=$PDK"
-	echo "export STD_CELL_LIBRARY=$MY_STDCELL"
-} >> "$HOME/.bashrc"
 
 export PDK_ROOT=$PDK_ROOT
 export PDK=$PDK
@@ -247,6 +254,7 @@ cp -f $PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc $HOME/.magicrc
 # mkdir $HOME/.klayout/
 cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/drc $HOME/.klayout/drc
 # cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/lvs $HOME/.klayout/lvs
+cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/lvs/rule_decks $HOME/.klayout/lvs/rule_decks
 # mkdir $HOME/.klayout/pymacros/
 # cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/pymacros $HOME/.klayout/pymacros/cells
 # cp -rf $PDK_ROOT/$PDK/libs.tech/klayout/tech $HOME/.klayout/tech
@@ -259,15 +267,17 @@ cp -f $PDK_ROOT/$PDK/libs.ref/gf180mcu_fd_sc_mcu9t5v0/gds/gf180mcu_fd_sc_mcu9t5v
 
 # Fix paths in xschemrc to point to correct PDK directory
 # -------------------------------------------------------
-sed -i 's/models\/ngspice/gf180mcuD\/libs.tech\/ngspice/g' "$HOME/.xschem/xschemrc"
-echo 'append XSCHEM_LIBRARY_PATH :${PDK_ROOT}/gf180mcuD/libs.tech/xschem' >> "$HOME/.xschem/xschemrc"
-echo 'set 180MCU_STDCELLS ${PDK_ROOT}/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice' >> "$HOME/.xschem/xschemrc"
+sed -i 's/models\/ngspice/$env(PDK)\/libs.tech\/ngspice/g' "$HOME/.xschem/xschemrc"
+# echo 'append XSCHEM_LIBRARY_PATH :${PDK_ROOT}/$env(PDK)/libs.tech/xschem' >> "$HOME/.xschem/xschemrc"
+echo 'set 180MCU_STDCELLS ${PDK_ROOT}/$env(PDK)/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice' >> "$HOME/.xschem/xschemrc"
 echo 'puts stderr "180MCU_STDCELLS: $180MCU_STDCELLS"' >> "$HOME/.xschem/xschemrc"
 
 # setup gnome-terminal
 # --------
-sudo apt -qq install -y gnome-terminal
-systemctl --user start gnome-terminal-server
+if [ ! -d "$SRC_DIR" ]; then
+	sudo apt -qq install -y gnome-terminal
+	systemctl --user start gnome-terminal-server
+fi
 
 # Finished
 # --------

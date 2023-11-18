@@ -56,16 +56,6 @@ else
   report_lvs($report_path)
 end
 
-if $target_netlist
-  logger.info("LVS extracted netlist at: #{$target_netlist}")
-  target_netlist($target_netlist)
-else
-  layout_dir = Pathname.new(RBA::CellView.active.filename).parent.realpath
-  netlist_path = layout_dir.join("#{source.cell_name}_extracted.cir")
-  logger.info("GF180MCU Klayout LVS extracted netlist file at: #{source.cell_name}_extracted.cir")
-  target_netlist("#{netlist_path}")
-end
-
 #================================================
 #------------------ SWITCHES --------------------
 #================================================
@@ -93,6 +83,17 @@ logger.info("Extracted netlist with net names: #{SPICE_WITH_NET_NAMES}")
 SPICE_WITH_COMMENTS = bool_check?($spice_comments)
 
 logger.info("Extracted netlist with comments in details: #{SPICE_WITH_COMMENTS}")
+
+#=== TARGET NETLIST ===
+if $target_netlist
+  logger.info("LVS extracted netlist at: #{$target_netlist}")
+  target_netlist($target_netlist, write_spice(SPICE_WITH_NET_NAMES, SPICE_WITH_COMMENTS), "Extracted by KLayout with GF180MCU LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
+else
+  layout_dir = Pathname.new(RBA::CellView.active.filename).parent.realpath
+  netlist_path = layout_dir.join("#{source.cell_name}_extracted.cir")
+  target_netlist("#{netlist_path}", write_spice(SPICE_WITH_NET_NAMES, SPICE_WITH_COMMENTS),  "Extracted by KLayout with GF180MCU LVS runset on : #{Time.now.strftime("%d/%m/%Y %H:%M")}")
+  logger.info("GF180MCU Klayout LVS extracted netlist file at: #{source.cell_name}_extracted.cir")
+end
 
 #=== EXTRACTION SCALE ===
 DEV_SCALE = bool_check?($scale)
@@ -286,6 +287,12 @@ logger.info('Starting base layers derivations')
 #================================
 
 # %include rule_decks/efuse_derivations.lvs
+
+#================================================
+#------------ 3ZKI CUSTOMIZED RULES -------------
+#================================================
+
+# %include 3zki_customize.lvs
 
 #================================================
 #------------ DEVICES CONNECTIVITY --------------
