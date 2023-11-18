@@ -59,7 +59,7 @@ logger.info("pad_label has #{count} polygons")
 logger.info("Total no. of polygons in the design is #{polygons_count}")
 
 ## ---------------------------------------
-## customized general_derications.lvs
+## customized general_derivations.lvs
 ## ---------------------------------------
 ## lvpwell without dnwell should be connected to P-substrate
 ## nwell and dnwell should be connected
