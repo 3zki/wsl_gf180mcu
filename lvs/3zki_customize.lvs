@@ -9,6 +9,39 @@
 ## ---------------------------------------
 ## customized layers_definitions.lvs
 ## ---------------------------------------
+
+case METAL_LEVEL
+when '3LM', '4LM', '5LM', '6LM'
+  metal3_label = labels(42, 10)
+  count = metal3_label.count
+  logger.info("metal3_label has #{count} polygons")
+  polygons_count += count
+end
+
+case METAL_LEVEL
+when '4LM', '5LM', '6LM'
+  metal4_label = labels(46, 10)
+  count = metal4_label.count
+  logger.info("metal4_label has #{count} polygons")
+  polygons_count += count
+end
+
+case METAL_LEVEL
+when '5LM', '6LM'
+  metal5_label = labels(81, 10)
+  count = metal5_label.count
+  logger.info("metal5_label has #{count} polygons")
+  polygons_count += count
+end
+
+case METAL_LEVEL
+when '6LM'
+  metaltop_label = labels(53, 10)
+  count = metaltop_label.count
+  logger.info("metaltop_label has #{count} polygons")
+  polygons_count += count
+end
+
 nwell_label = labels(21, 10)
 count = nwell_label.count
 logger.info("nwell_label has #{count} polygons")
@@ -28,7 +61,6 @@ logger.info("Total no. of polygons in the design is #{polygons_count}")
 ## ---------------------------------------
 ## customized general_derications.lvs
 ## ---------------------------------------
-## Technical notes:
 ## lvpwell without dnwell should be connected to P-substrate
 ## nwell and dnwell should be connected
 dual_tap	= lvpwell.not(dnwell)
