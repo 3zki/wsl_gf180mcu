@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <klayout-macro>
- <description>Make netlist for Klayout LVS</description>
+ <description>Make netlist for KLayout LVS</description>
  <version/>
  <category/>
  <prolog/>
