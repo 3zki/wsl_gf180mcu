@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <klayout-macro>
- <description>Make netlist (MCU7T5V0) for Klayout LVS</description>
+ <description>Make netlist (MCU7T5V0) for KLayout LVS</description>
  <version/>
  <category/>
  <prolog/>
