@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <klayout-macro>
- <description>Run Klayout LVS</description>
+ <description>Run KLayout LVS</description>
  <version>0.1</version>
  <category>lvs</category>
  <prolog/>
