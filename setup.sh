@@ -98,7 +98,7 @@ fi
 
 # Create PDK directory if it does not yet exist
 # ---------------------------------------------
-if [ -d "$PDK_ROOT" ]; then
+if [ ! -d "$PDK_ROOT" ]; then
 	sudo mkdir "$PDK_ROOT"
 	sudo chown "$USER:staff" "$PDK_ROOT"
 	cd "$PDK_ROOT" || exit
