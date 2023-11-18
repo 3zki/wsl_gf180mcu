@@ -89,6 +89,21 @@ sudo apt -qq install -y build-essential python3-pip
 # octave octave-signal octave-communications octave-control
 # htop mc gedit vim vim-gtk3 kdiff3
 
+# Create .bashrc
+# ------------------
+if [ ! -d "$SRC_DIR" ]; then
+	{
+		echo '#'
+		echo '# (c) 2021-2022 Harald Pretl'
+		echo '# Institute for Integrated Circuits'
+		echo '# Johannes Kepler University Linz'
+		echo '#'
+		echo "export PDK_ROOT=$PDK_ROOT"
+		echo "export PDK=$PDK"
+		echo "export STD_CELL_LIBRARY=$MY_STDCELL"
+	} >> "$HOME/.bashrc"
+fi
+
 # setup gnome-terminal
 # --------
 if [ ! -d "$SRC_DIR" ]; then
@@ -233,20 +248,6 @@ if [ ! -f "$HOME/.spiceinit" ]; then
 		echo "set ngbehavior=hsa"
 		echo "set ng_nomodcheck"
 	} > "$HOME/.spiceinit"
-fi
-# Create .bashrc
-# ------------------
-if [ ! -d "$SRC_DIR" ]; then
-	{
-		echo '#'
-		echo '# (c) 2021-2022 Harald Pretl'
-		echo '# Institute for Integrated Circuits'
-		echo '# Johannes Kepler University Linz'
-		echo '#'
-		echo "export PDK_ROOT=$PDK_ROOT"
-		echo "export PDK=$PDK"
-		echo "export STD_CELL_LIBRARY=$MY_STDCELL"
-	} >> "$HOME/.bashrc"
 fi
 
 if [ ! -d "$HOME/.xschem" ]; then
