@@ -43,6 +43,6 @@ $metal_top = "11K"
 $metal_level = "5LM"
 $feol = "true"
 $beol = "true"
-# %include gf180mcuC_mr.drc
+# %include gf180mcuD_mr.drc
 </text>
 </klayout-macro>
