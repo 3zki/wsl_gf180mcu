@@ -1712,7 +1712,7 @@ def draw_nfet(
     # creating layout and cell in klayout
     c.write_gds("nfet_temp.gds")
     layout.read("nfet_temp.gds")
-    cell_name = "sky_nfet_dev"
+    cell_name = c.name
     os.remove("nfet_temp.gds")
 
     return layout.cell(cell_name)
@@ -2342,7 +2342,7 @@ def draw_pfet(
     # creating layout and cell in klayout
     c.write_gds("pfet_temp.gds")
     layout.read("pfet_temp.gds")
-    cell_name = "sky_pfet_dev"
+    cell_name = c.name
     os.remove("pfet_temp.gds")
 
     return layout.cell(cell_name)
@@ -2975,7 +2975,7 @@ def draw_nfet_06v0_nvt(
 
     c.write_gds("nfet_nvt_temp.gds")
     layout.read("nfet_nvt_temp.gds")
-    cell_name = "sky_nfet_nvt_dev"
+    cell_name = c.name
     os.remove("nfet_nvt_temp.gds")
 
     return layout.cell(cell_name)

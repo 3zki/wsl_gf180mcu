@@ -107,7 +107,7 @@ def draw_metal_res(
     # creating layout and cell in klayout
     c.write_gds("res_temp.gds")
     layout.read("res_temp.gds")
-    cell_name = "res_dev"
+    cell_name = c.name
     os.remove("res_temp.gds")
 
     return layout.cell(cell_name)
@@ -476,7 +476,7 @@ def draw_nplus_res(
 
     c.write_gds("res_temp.gds")
     layout.read("res_temp.gds")
-    cell_name = "res_dev"
+    cell_name = c.name
     os.remove("res_temp.gds")
 
     return layout.cell(cell_name)
@@ -561,7 +561,7 @@ def draw_pplus_res(
 
     c.write_gds("res_temp.gds")
     layout.read("res_temp.gds")
-    cell_name = "res_dev"
+    cell_name = c.name
     os.remove("res_temp.gds")
 
     return layout.cell(cell_name)
@@ -770,7 +770,7 @@ def draw_npolyf_res(
 
     c.write_gds("res_temp.gds")
     layout.read("res_temp.gds")
-    cell_name = "res_dev"
+    cell_name = c.name
     os.remove("res_temp.gds")
 
     return layout.cell(cell_name)
@@ -846,7 +846,7 @@ def draw_ppolyf_res(
 
     c.write_gds("res_temp.gds")
     layout.read("res_temp.gds")
-    cell_name = "res_dev"
+    cell_name = c.name
     os.remove("res_temp.gds")
 
     return layout.cell(cell_name)
@@ -1060,7 +1060,7 @@ def draw_ppolyf_u_high_Rs_res(
 
     c.write_gds("res_temp.gds")
     layout.read("res_temp.gds")
-    cell_name = "res_dev"
+    cell_name = c.name
     os.remove("res_temp.gds")
 
     return layout.cell(cell_name)
@@ -1237,7 +1237,7 @@ def draw_well_res(
 
     c.write_gds("res_temp.gds")
     layout.read("res_temp.gds")
-    cell_name = "res_dev"
+    cell_name = c.name
     os.remove("res_temp.gds")
 
     return layout.cell(cell_name)

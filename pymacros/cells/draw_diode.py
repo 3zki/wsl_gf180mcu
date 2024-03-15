@@ -363,7 +363,7 @@ def draw_diode_nd2ps(
 
     c.write_gds("diode_nd2ps_temp.gds")
     layout.read("diode_nd2ps_temp.gds")
-    cell_name = "diode_nd2ps_dev"
+    cell_name = c.name
     os.remove("diode_nd2ps_temp.gds")
 
     return layout.cell(cell_name)
@@ -697,7 +697,7 @@ def draw_diode_pd2nw(
 
     c.write_gds("diode_pd2nw_temp.gds")
     layout.read("diode_pd2nw_temp.gds")
-    cell_name = "diode_pd2nw_dev"
+    cell_name = c.name
     os.remove("diode_pd2nw_temp.gds")
 
     return layout.cell(cell_name)
@@ -838,7 +838,7 @@ def draw_diode_nw2ps(
 
     c.write_gds("diode_nw2ps_temp.gds")
     layout.read("diode_nw2ps_temp.gds")
-    cell_name = "diode_nw2ps_dev"
+    cell_name = c.name
     os.remove("diode_nw2ps_temp.gds")
 
     return layout.cell(cell_name)
@@ -1275,7 +1275,7 @@ def draw_diode_pw2dw(
 
     c.write_gds("diode_pw2dw_temp.gds")
     layout.read("diode_pw2dw_temp.gds")
-    cell_name = "diode_pw2dw_dev"
+    cell_name = c.name
     os.remove("diode_pw2dw_temp.gds")
 
     return layout.cell(cell_name)
@@ -1677,7 +1677,7 @@ def draw_diode_dw2ps(
 
     c.write_gds("diode_dw2ps_temp.gds")
     layout.read("diode_dw2ps_temp.gds")
-    cell_name = "diode_dw2ps_dev"
+    cell_name = c.name
     os.remove("diode_dw2ps_temp.gds")
 
     return layout.cell(cell_name)
@@ -2073,7 +2073,7 @@ def draw_sc_diode(
 
     c.write_gds("sc_diode_temp.gds")
     layout.read("sc_diode_temp.gds")
-    cell_name = "sc_diode_dev"
+    cell_name = c.name
     os.remove("sc_diode_temp.gds")
 
     return layout.cell(cell_name)

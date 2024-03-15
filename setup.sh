@@ -30,9 +30,9 @@ export SRC_DIR="$HOME/src"
 my_path=$(realpath "$0")
 my_dir=$(dirname "$my_path")
 export SCRIPT_DIR="$my_dir"
-export KLAYOUT_VERSION=0.28.12
+export KLAYOUT_VERSION=0.28.17
 export PDK=gf180mcuD
-export VOLARE_H=e0f692f46654d6c7c99fc70a0c94a080dab53571
+export VOLARE_H=bdc9412b3e468c102d01b7cf6337be06ec6e9c9a
 
 # ---------------
 # Now go to work!

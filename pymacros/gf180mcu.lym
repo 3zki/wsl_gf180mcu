@@ -33,11 +33,12 @@ limitations under the License.
 
 import sys
 import os
-import gf180
+
 technology_macros_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, technology_macros_path)
 
 from cells import gf180mcu
+
 # Instantiate and register the library
 gf180mcu()
 

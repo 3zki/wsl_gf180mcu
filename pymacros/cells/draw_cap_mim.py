@@ -139,7 +139,7 @@ def draw_cap_mim(
 
     c.write_gds("mim_cap_temp.gds")
     layout.read("mim_cap_temp.gds")
-    cell_name = "mim_cap_dev"
+    cell_name = c.name
     os.remove("mim_cap_temp.gds")
 
     return layout.cell(cell_name)

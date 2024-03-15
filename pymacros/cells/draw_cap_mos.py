@@ -524,7 +524,7 @@ def draw_cap_mos(
 
     c.write_gds("cap_mos_temp.gds")
     layout.read("cap_mos_temp.gds")
-    cell_name = "cap_mos_dev"
+    cell_name = c.name
     os.remove("cap_mos_temp.gds")
 
     return layout.cell(cell_name)

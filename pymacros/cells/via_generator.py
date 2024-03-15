@@ -400,7 +400,7 @@ def draw_via_dev(
 
     c.write_gds("via_stack_temp.gds")
     layout.read("via_stack_temp.gds")
-    cell_name = "via_stack_dev"
+    cell_name = c.name
     print(type(layout.cell(cell_name)))
 
     return layout.cell(cell_name)
