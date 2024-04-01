@@ -1,5 +1,5 @@
 ##
-## COMPLAIANT WINDOW: github.com/3zki
+## COMPLAINT WINDOW: github.com/3zki
 ##
 
 ##
@@ -69,7 +69,13 @@ triple_tap	= nwell.and(dnwell)
 ## ---------------------------------------
 ## customized general_connections.lvs
 ## ---------------------------------------
-# connect(metal2_con, metal2_label)
+
+# ----------------------------------------
+# ========= Metal2 Label Bug fix =========
+# Disabled when MIM-A is used 
+# enabled when MIM-B is used
+connect(metal2_con, metal2_label)
+# ----------------------------------------
 connect(nwell_con, nwell_label)
 connect(lvpwell_con, lvpwell_label)
 connect(pad, pad_label)
@@ -79,6 +85,10 @@ logger.info('Starting GF180 LVS connectivity setup (Dual/Triple well)')
 # Dual-well connection:
 connect(sub, dual_tap)
 connect(dual_tap, lvpwell_con)
+
+# Triple-well connection:
+connect(dnwell, triple_tap)
+connect(triple_tap, nwell_con)
 
 # Triple-well connection:
 connect(dnwell, triple_tap)
